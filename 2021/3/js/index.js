@@ -13,18 +13,36 @@ async function main(lines) {
     }
   }
 
-  var output = Array.from(map.values()).map(indexOfLargestValue);
+  var larger = Array.from(map.values()).map(indexOfLargestValue);
+  var gammaRate = parseInt(larger.join(''), 2);
+  var smaller = Array.from(map.values()).map(indexOfSmallestValue);
+  var epsRate = parseInt(smaller.join(''), 2);
 
-  var gammaRate = parseInt(output.join(''), 2);
-  console.log(gammaRate)
+  console.log(gammaRate, epsRate)
+  console.log(gammaRate * epsRate)
+}
+
+function bigger(a, b) {
+  return b > a;
+}
+
+function lesser(a, b) {
+  return b < a;
 }
 
 function indexOfLargestValue(array) {
+  return indexOfMostValue(array, bigger, -Infinity);
+}
+
+function indexOfSmallestValue(array) {
+  return indexOfMostValue(array, lesser, +Infinity);
+}
+
+function indexOfMostValue(array, isItMore, value) {
   var answer = -1;
-  var value = -Infinity;
   for (var i = 0; i < array.length; i++) {
     var newValue = array[i];
-    if (value < newValue) {
+    if (isItMore(value, newValue)) {
       value = newValue;
       answer = i;
     }
