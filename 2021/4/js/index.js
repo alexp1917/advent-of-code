@@ -4,14 +4,23 @@ var GRID_H = 5;
 var WINNER = 5;
 var LINES_BETWEEN_SECTIONS = 1;
 
-function main(lines) {
+/**
+ * Find the first board that wins if firstNotLast is set,
+ * otherwise, get the last board to win.
+ *
+ * @param firstNotLast - Boolean - get first board that wins
+ **/
+function main(lines, firstNotLast = false) {
   lines = lines.split(os.EOL);
   var moves = lines[0].split(',').map(e => parseInt(e, 10));
-  
+
   var boards = readBoards(lines);
-  
+
+  var winningBoards = new Set();
+
   for (var i = 0; i < moves.length; i++) {
     var move = moves[i];
+    console.log({ move })
 
     for (var j = 0; j < boards.length; j++) {
       var board = boards[j];
@@ -26,6 +35,18 @@ function main(lines) {
             element.marked = true;
 
             if (wins(board)) {
+              // aka if looking for last
+              if (!firstNotLast) {
+                winningBoards.add(j);
+
+                if (winningBoards.size === boards.length) {
+                  var score = move * sumUnmarked(board);
+                  console.log('board', j + 1, 'wins last! score:', score);
+                  return;
+                }
+
+                continue;
+              }
               var score = move * sumUnmarked(board);
               console.log('board', j + 1, 'wins! score:', score);
               return;
