@@ -8,28 +8,29 @@ var lines = input.split('\n');
 
 async function main(lines) {
   var h = 0, d = 0;
+  var aim = 0;
   for await (var line of lines) {
     var [ direction, count ] = line.split(' ');
     var number = parseInt(count, 10);
     switch (direction) {
       case 'forward': {
         h += number;
+        d += (aim * number);
         break;
       }
 
       case 'down': {
-        d += number;
+        aim += number;
         break;
       }
 
       case 'up': {
-        d -= number;
+        aim -= number;
         break;
       }
 
       default: {
-        h -= number;
-        break;
+        throw new Error('what is this?', line);
       }
     }
   }
