@@ -1,7 +1,7 @@
 async function main(lines) {
-  var larger = await positionLargest(lines);
+  var [larger, smaller] = await positionLargest(lines);
 
-  var [gammaRate, epsRate] = formatOutput(larger);
+  var [gammaRate, epsRate] = formatOutput(larger, smaller);
   console.log(gammaRate, epsRate);
   console.log(gammaRate * epsRate);
 }
@@ -22,12 +22,12 @@ async function positionLargest(lines) {
   }
 
   var larger = Array.from(map.values()).map(indexOfLargestValue);
-  return larger;
+  var smaller = larger.map(e => e === 0).map(Number);
+  return [larger, smaller];
 }
 
-function formatOutput(larger) {
+function formatOutput(larger, smaller) {
   var gammaRate = parseInt(larger.join(''), 2);
-  var smaller = larger.map(e => e === 0).map(Number);
   var epsRate = parseInt(smaller.join(''), 2);
 
   return [gammaRate, epsRate];
