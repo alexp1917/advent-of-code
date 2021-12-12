@@ -27,12 +27,7 @@ async function lifeSupportValue(buffer, larger = true) {
     var positions = await positionLargest(buffer);
     lastMostValues = positions[positionLargerIndex];
 
-    // console.log('buffer was', buffer.join(', '));
-    // moved conditional out of loop for optimization
-    // if (buffer.length === 2)
-    //   buffer = parseInt(buffer[0], 2) > parseInt(buffer[1], 2) ? [buffer[0]] : [buffer[1]];
-    // else
-      buffer = buffer.filter(e => e[position] == lastMostValues[position]);
+    buffer = buffer.filter(e => e[position] == lastMostValues[position]);
 
     position++;
   }
@@ -41,13 +36,10 @@ async function lifeSupportValue(buffer, larger = true) {
     return parseInt(buffer[0], 2);
 
   // pick the larger one
-  console.log(buffer, position)
-  console.log(buffer[0][position], buffer[1][position], larger)
-  buffer = (buffer[0][position] == (larger ? 1 : 0)) ? [buffer[0]] : [buffer[1]];
+  var value = (buffer[0][position] == (larger ? 1 : 0)) ? buffer[0] : buffer[1];
 
-  console.log(buffer[0])
-  console.log(parseInt(buffer[0], 2))
-  return parseInt(buffer[0], 2);
+  // console.log(value)
+  return parseInt(value, 2);
 }
 
 async function positionLargest(lines) {
