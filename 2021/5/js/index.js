@@ -1,5 +1,17 @@
+function max(a, b) {
+  return Math.max(a, b);
+}
+
+function getMaxNumber(lines) {
+  return lines.map(e => Array.from(e.match(/\d+/g)).reduce(max)).reduce(max);
+}
+
+function getInitialSize(maxNumber) {
+  return Math.pow(10, (maxNumber + '').length);
+}
+
 function main(lines) {
-  var state = getInitialState(1000);
+  var state = getInitialState(getInitialSize(getMaxNumber(lines)));
   for (var line of lines) {
     var ventCoordinate = parse(line);
     var aligned = isAligned(ventCoordinate);
@@ -15,8 +27,7 @@ function main(lines) {
      * [ [ 3, 4 ], [ 1, 4 ] ]
      * [Finished in 63ms]
      */
-    if (aligned)
-      mark(ventCoordinate, state);
+    mark(ventCoordinate, state);
   }
 
   console.log(formatMatrix(state.matrix))
@@ -41,7 +52,7 @@ function countOverlaps(matrix) {
 
 function formatMatrix(matrix) {
   return matrix.map(row => (
-    row.map(el => el.vents || '*').join('')
+    row.map(el => el.vents || '.').join('')
   )).join(os.EOL);
 }
 
@@ -73,6 +84,19 @@ function mark(coord, state) {
 
     for (var y = y_min; y <= y_max; y++) {
       matrix[y][x1].vents++;
+    }
+  } else if (x_max - x_min === y_max - y_min) {
+    var diagonal = x_max - x_min;
+
+    var xRev = x1 === x_min;
+    var yRev = y1 === y_min;
+
+    // important to be '<=' !!!
+    for (var i = 0; i <= diagonal; i++) {
+      var x = xRev ? x_min + i : x_max - i;
+      var y = yRev ? y_min + i : y_max - i;
+
+      matrix[y][x].vents++;
     }
   }
 
